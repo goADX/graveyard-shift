@@ -4,7 +4,7 @@ public class CharecterInCounterScript : MonoBehaviour
 {
 
     public GameObject TextBox;
-
+    public CounterManager counterManager;
     public enum DialogueState
     {
         walking,
@@ -101,6 +101,16 @@ public class CharecterInCounterScript : MonoBehaviour
 
         }
 
+    }
+
+
+
+    public void Finished()
+    {
+        
+
+
+        Destroy(gameObject);
     }
 
     void LateUpdate()
