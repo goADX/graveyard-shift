@@ -45,6 +45,8 @@ public class Requests : ScriptableObject
     public Charecters charecterRelatedToRequest;
 
 
+    public float weight = 1f;
+
 
     [Header("Message")]
     
