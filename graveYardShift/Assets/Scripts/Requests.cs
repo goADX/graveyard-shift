@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using System;
 
 [CreateAssetMenu(fileName = "Requests", menuName = "Scriptable Objects/Requests")]
 public class Requests : ScriptableObject
@@ -48,4 +49,13 @@ public class Requests : ScriptableObject
     [Header("Message")]
     
     public string requestText;
+
+    public string? GetRequestText(int stringLineNumber)
+    {
+        string[] lines = requestText.Split(
+    new[] { "\r\n", "\r", "\n" },
+    StringSplitOptions.RemoveEmptyEntries
+);
+        return lines.Length > stringLineNumber ? lines[stringLineNumber] : null;
+    }
 }
