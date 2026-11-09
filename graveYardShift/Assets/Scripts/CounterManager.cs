@@ -86,21 +86,51 @@ public class CounterManager : MonoBehaviour
             {
                 validRequests.Add(request);
             }
-            else if (request.requester == Requests.Requester.TypeOfCharecter && request.monsterTypeRequester == charecter.charecterType)
-            {
-                validRequests.Add(request);
-            }
+            
         }
 
         if (validRequests.Count > 0)
         {
-            return validRequests[Random.Range(0, validRequests.Count)];
-        }
+            return PickWeightedRequest(validRequests);        }
         else
         {
             Debug.LogWarning("No valid requests found for the given character.");
             return null;
         }
+    }
+
+    private Requests PickWeightedRequest(List<Requests> requests)
+    {
+        float totalWeight = 0f;
+
+        foreach (var request in requests)
+        {
+            if (request.weight > 0)
+                totalWeight += request.weight;
+        }
+
+        if (totalWeight <= 0f)
+        {
+            Debug.LogWarning("No valid requests with a positive weight.");
+            return null;
+        }
+
+        float roll = Random.Range(0f, totalWeight);
+        Requests lastPositiveRequest = null;
+
+        foreach (var request in requests)
+        {
+            if (request.weight <= 0)
+                continue;
+
+            lastPositiveRequest = request;
+            roll -= request.weight;
+
+            if (roll <= 0f)
+                return request;
+        }
+
+        return lastPositiveRequest; // Floating-point safety fallback
     }
 
     public void charecterLeftCounter()
