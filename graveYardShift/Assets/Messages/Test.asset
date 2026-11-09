@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1383263a1e42c854da72cc4968065a65, type: 3}
   m_Name: Test
   m_EditorClassIdentifier: Assembly-CSharp::Requests
-  requester: 0
+  requester: 2
   charecterRequester: {fileID: 0}
   monsterTypeRequester: 0
   requestType: 0
