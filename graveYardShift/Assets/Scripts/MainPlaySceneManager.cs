@@ -10,7 +10,7 @@ public class MainPlaySceneManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        SwitchToCounterCamera();
     }
 
     // Update is called once per frame
@@ -24,14 +24,13 @@ public class MainPlaySceneManager : MonoBehaviour
     {
         CounterCamera.SetActive(true);
         GraveyardCamera.SetActive(false);
-    }
-    public void SwitchToGraveyardCamera()
+    }    public void SwitchToGraveyardCamera()
     {
         CounterCamera.SetActive(false);
         GraveyardCamera.SetActive(true);
     }
 
-    
+    //
 
 
 }

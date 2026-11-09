@@ -50,6 +50,7 @@ public class Requests : ScriptableObject
     
     public string requestText;
 
+    #nullable enable
     public string? GetRequestText(int stringLineNumber)
     {
         string[] lines = requestText.Split(
