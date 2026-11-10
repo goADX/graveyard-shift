@@ -26,8 +26,8 @@ public class MainPlaySceneManager : MonoBehaviour
 
     public void SwitchToCounterCamera()
     {
-        CounterCamera.SetActive(true);
         GraveyardCamera.SetActive(false);
+        CounterCamera.SetActive(true);
         for (int i = 0; i < graveYardEtc.Length; i++)
         {
             graveYardEtc[i].SetActive(false);
