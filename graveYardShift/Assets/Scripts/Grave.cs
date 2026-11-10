@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 public class Grave : MonoBehaviour, IPointerClickHandler
 {
-    public GraveyardManager graveyardManager;
+    public GraveYardManager graveyardManager;
     public bool isOccupied;
     public bool isDug;
 
