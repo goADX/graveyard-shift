@@ -11,6 +11,8 @@ public class CharecterInCounterScript : MonoBehaviour
     public GameObject TextBox;
     public TMP_Text dialogueText;
     public CounterManager counterManager;
+
+    public Charecters myCharecter;
     public enum DialogueState
     {
         walking,
@@ -37,6 +39,10 @@ public class CharecterInCounterScript : MonoBehaviour
     private void Start()
     {
         currentDialogueState = DialogueState.walking;
+        if(myCharecter != null)
+        {
+            GetComponent<SpriteRenderer>().sprite = myCharecter.charecterSprite;
+        }
     }
 
     // Update is called once per frame
@@ -112,7 +118,7 @@ public class CharecterInCounterScript : MonoBehaviour
     public void Finished()
     {
         
-        counterManager.charecterLeftCounter(currentRequest);
+        counterManager.charecterLeftCounter(currentRequest, myCharecter);
         Destroy(gameObject);
     }
 

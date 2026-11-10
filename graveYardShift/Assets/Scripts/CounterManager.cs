@@ -135,9 +135,9 @@ public class CounterManager : MonoBehaviour
         return lastPositiveRequest; // Floating-point safety fallback
     }
 
-    public void charecterLeftCounter(Requests request)
+    public void charecterLeftCounter(Requests request, Charecters charecter )
     {
         IsThereCharecterOnCounter = false;
-        theGreatPlayManager.AddRequest(request);
+        theGreatPlayManager.AddRequest(request, charecter);
     }
 }

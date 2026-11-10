@@ -1,7 +1,9 @@
 using UnityEngine;
-
-public class Grave : MonoBehaviour
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
+public class Grave : MonoBehaviour, IPointerClickHandler
 {
+    public GraveyardManager graveyardManager;
     public bool isOccupied;
     public bool isDug;
 
@@ -48,6 +50,13 @@ public class Grave : MonoBehaviour
         OccupyingCharecter = null;
     }
 
-
+     public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            graveyardManager.HandleGraveClick(this);
+            
+        }
+    }
 
 }

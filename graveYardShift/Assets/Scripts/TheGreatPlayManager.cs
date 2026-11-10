@@ -5,7 +5,9 @@ public class TheGreatPlayManager : MonoBehaviour
 
 
 
-    public List<Requests> RequestsList = new List<Requests>();
+    [System.NonSerialized]
+
+    public List<RequestData> RequestsList = new List<RequestData>();
 
 
 
@@ -26,15 +28,16 @@ public class TheGreatPlayManager : MonoBehaviour
 
 
 
-    public void AddRequest(Requests request)
+
+    public void AddRequest(Requests request, Charecters personMakingRequest)
     {
-        RequestsList.Add(request);
+        RequestsList.Add(new RequestData(request, personMakingRequest));
     }
 
 
 
 
-    public bool CheckRequest(Requests request)
+    public bool CheckRequest(RequestData request)
     {
         //todo: check if request is done
         return true;

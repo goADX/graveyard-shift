@@ -62,3 +62,16 @@ public class Requests : ScriptableObject
         return lines.Length > stringLineNumber ? lines[stringLineNumber] : null;
     }
 }
+
+
+public struct RequestData
+{
+    public Requests request;
+    public Charecters PersonMakingRequest;
+
+    public RequestData(Requests request, Charecters personMakingRequest)
+    {
+        this.request = request;
+        this.PersonMakingRequest = personMakingRequest;
+    }
+}
