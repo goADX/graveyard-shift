@@ -1,9 +1,14 @@
 using UnityEngine;
+using TMPro;
+using UnityEngine.InputSystem;
 
 public class CharecterInCounterScript : MonoBehaviour
 {
 
+
+
     public GameObject TextBox;
+    public TMP_Text dialogueText;
     public CounterManager counterManager;
     public enum DialogueState
     {
@@ -28,9 +33,8 @@ public class CharecterInCounterScript : MonoBehaviour
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        transform.position = initialPosition;
         currentDialogueState = DialogueState.walking;
     }
 
@@ -41,8 +45,10 @@ public class CharecterInCounterScript : MonoBehaviour
         {
             Vector3 direction = (targetPosition - transform.position).normalized;
             Vector3 movement = direction * walkSpeed * Time.deltaTime;
+
             if(movement.magnitude >= (targetPosition - transform.position).magnitude)
             {
+                //finish walking and start dialogue
                 transform.position = targetPosition;
                 currentDialogueState = DialogueState.talking;
                 currentLineNumber = 0;
@@ -50,36 +56,35 @@ public class CharecterInCounterScript : MonoBehaviour
             }
             else
             {
+                //print (targetPosition + " - "+ transform.position);
                 transform.position += movement;
             }
         }else if(currentDialogueState == DialogueState.talking)
         {
             // Show the dialogue box and start the dialogue
             TextBox.SetActive(true);
-            // Start the dialogue logic here
+            dialogueText.text = LineToRead;
+            currentDialogueState = DialogueState.waitingForInput;
         }
         else if(currentDialogueState == DialogueState.waitingForInput)
         {
-            // Wait for player input to continue the dialogue
-            if(Input.GetKeyDown(KeyCode.Space))
             {
-                currentLineNumber++;
-                if(currentRequest.GetRequestText(currentLineNumber) == null)
+                if (Keyboard.current != null &&
+                    Keyboard.current.spaceKey.wasPressedThisFrame)
                 {
-                    currentDialogueState = DialogueState.finished;
-                }
-                else
-                {
+                    currentLineNumber++;
                     LineToRead = currentRequest.GetRequestText(currentLineNumber);
-                    currentDialogueState = DialogueState.talking;
 
+                    currentDialogueState = LineToRead == null
+                        ? DialogueState.finished
+                        : DialogueState.talking;
                 }
-                // Continue the dialogue logic here
             }
         }
         else if(currentDialogueState == DialogueState.finished)
         {
             // Hide the dialogue box and reset the state
+            dialogueText.text = "";
             TextBox.SetActive(false);
             currentDialogueState = DialogueState.walkingOut; 
         }else if(currentDialogueState == DialogueState.walkingOut)
@@ -90,9 +95,7 @@ public class CharecterInCounterScript : MonoBehaviour
             if(movement.magnitude >= (exitPosition - transform.position).magnitude)
             {
                 transform.position = exitPosition;
-                // Reset the character to the initial position
-                transform.position = initialPosition;
-                currentDialogueState = DialogueState.walking;
+                Finished();                
             }
             else
             {
@@ -108,8 +111,7 @@ public class CharecterInCounterScript : MonoBehaviour
     public void Finished()
     {
         
-
-
+        counterManager.charecterLeftCounter();
         Destroy(gameObject);
     }
 

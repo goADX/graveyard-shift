@@ -12,11 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1383263a1e42c854da72cc4968065a65, type: 3}
   m_Name: Test
   m_EditorClassIdentifier: Assembly-CSharp::Requests
-  requester: 2
+  requester: 0
   charecterRequester: {fileID: 0}
   monsterTypeRequester: 0
   requestType: 0
   LineNumber: 0
   exactLocation: {x: 0, y: 0}
   charecterRelatedToRequest: {fileID: 0}
-  requestText: 
+  weight: 1
+  requestText: 'woooo
+
+    weeee
+
+    woooo'

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 //using System;
+using UnityEngine.InputSystem;
 
 public class CounterManager : MonoBehaviour
 {
@@ -40,7 +41,7 @@ public class CounterManager : MonoBehaviour
         
         if(IsThereCharecterOnCounter == false)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 SpawnCharecter();
             }
