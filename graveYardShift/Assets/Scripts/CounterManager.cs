@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class CounterManager : MonoBehaviour
 {
 
+    public TheGreatPlayManager theGreatPlayManager;
     public GameObject[] CharecterPrefabs;
     public Requests[] RequestsList;
 
@@ -134,8 +135,9 @@ public class CounterManager : MonoBehaviour
         return lastPositiveRequest; // Floating-point safety fallback
     }
 
-    public void charecterLeftCounter()
+    public void charecterLeftCounter(Requests request)
     {
         IsThereCharecterOnCounter = false;
+        theGreatPlayManager.AddRequest(request);
     }
 }

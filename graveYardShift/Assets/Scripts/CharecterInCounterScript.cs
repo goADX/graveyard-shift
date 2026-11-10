@@ -6,6 +6,7 @@ public class CharecterInCounterScript : MonoBehaviour
 {
 
 
+    
 
     public GameObject TextBox;
     public TMP_Text dialogueText;
@@ -57,7 +58,7 @@ public class CharecterInCounterScript : MonoBehaviour
             else
             {
                 //print (targetPosition + " - "+ transform.position);
-                transform.position += movement;
+                Move(movement);
             }
         }else if(currentDialogueState == DialogueState.talking)
         {
@@ -99,7 +100,7 @@ public class CharecterInCounterScript : MonoBehaviour
             }
             else
             {
-                transform.position += movement;
+                Move(movement);
             }
 
         }
@@ -111,7 +112,7 @@ public class CharecterInCounterScript : MonoBehaviour
     public void Finished()
     {
         
-        counterManager.charecterLeftCounter();
+        counterManager.charecterLeftCounter(currentRequest);
         Destroy(gameObject);
     }
 
@@ -119,6 +120,13 @@ public class CharecterInCounterScript : MonoBehaviour
     {
         
     }
+
+
+    public void Move(Vector3 movement)
+    {//Todo: add cute animation
+        transform.position += movement;
+    }
+    
 
     /*
         first walk to the counter to speak
