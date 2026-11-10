@@ -11,7 +11,7 @@ public class CounterManager : MonoBehaviour
 
     private void Awake()
     {
-        CharecterPrefabs = Resources.LoadAll<GameObject>("Prefabs/Characters");
+        CharecterPrefabs = Resources.LoadAll<GameObject>("Preferbs/Characters");
 
         if (CharecterPrefabs.Length == 0)
             Debug.LogWarning("No prefabs found in the folder.");
