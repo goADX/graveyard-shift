@@ -3,9 +3,10 @@ using UnityEngine;
 public class MainPlaySceneManager : MonoBehaviour
 {
     public GameObject CounterCamera;
-    public GameObject[] graveYardEtc;
-    public GameObject GraveyardCamera;
     public GameObject[] counterEtc;
+    public GameObject GraveyardCamera;
+    public GameObject[] graveYardEtc;
+    
 
 
 
