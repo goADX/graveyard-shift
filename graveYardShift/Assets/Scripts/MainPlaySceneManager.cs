@@ -3,7 +3,10 @@ using UnityEngine;
 public class MainPlaySceneManager : MonoBehaviour
 {
     public GameObject CounterCamera;
+    public GameObject[] graveYardEtc;
     public GameObject GraveyardCamera;
+    public GameObject[] counterEtc;
+
 
 
 
@@ -24,10 +27,27 @@ public class MainPlaySceneManager : MonoBehaviour
     {
         CounterCamera.SetActive(true);
         GraveyardCamera.SetActive(false);
-    }    public void SwitchToGraveyardCamera()
+        for (int i = 0; i < graveYardEtc.Length; i++)
+        {
+            graveYardEtc[i].SetActive(false);
+        }
+        for (int i = 0; i < counterEtc.Length; i++)
+        {
+            counterEtc[i].SetActive(true);
+        }
+    }    
+    public void SwitchToGraveyardCamera()
     {
         CounterCamera.SetActive(false);
         GraveyardCamera.SetActive(true);
+        for (int i = 0; i < graveYardEtc.Length; i++)
+        {
+            graveYardEtc[i].SetActive(true);
+        }
+        for (int i = 0; i < counterEtc.Length; i++)
+        {
+            counterEtc[i].SetActive(false);
+        }
     }
 
     //
