@@ -7,14 +7,15 @@ public class CounterManager : MonoBehaviour
 {
 
     public TheGreatPlayManager theGreatPlayManager;
-    public GameObject[] CharecterPrefabs;
+    public GameObject CharecterPrefabs;
+    public Charecters[] AllCharecters;
     public Requests[] RequestsList;
 
     private void Awake()
     {
-        CharecterPrefabs = Resources.LoadAll<GameObject>("Preferbs/Characters");
+        AllCharecters = Resources.LoadAll<Charecters>("Characters");
 
-        if (CharecterPrefabs.Length == 0)
+        if (AllCharecters.Length == 0)
             Debug.LogWarning("No prefabs found in the folder.");
 
 
@@ -24,7 +25,7 @@ public class CounterManager : MonoBehaviour
     }
 
 
-    public List<GameObject> CharectersToSpawn = new List<GameObject>();
+    public List<Charecters> CharectersToSpawn = new List<Charecters>();
     public int numOfRequests = 5;
 
 
@@ -55,7 +56,7 @@ public class CounterManager : MonoBehaviour
         
         for (int i = 0; i < numOfRequests; i++)
         {
-            CharectersToSpawn.Add(CharecterPrefabs[Random.Range(0, CharecterPrefabs.Length)]);            
+            CharectersToSpawn.Add(AllCharecters[Random.Range(0, AllCharecters.Length)]);            
         }
     }
 
@@ -63,12 +64,15 @@ public class CounterManager : MonoBehaviour
     {
         if (CharectersToSpawn.Count > 0)
         {
-            GameObject charecterPrefab = CharectersToSpawn[0];
-            CharectersToSpawn.RemoveAt(0);
+            
+            
             //get the next in queue
 
-            GameObject charecterInstance = Instantiate(charecterPrefab, transform.position, Quaternion.identity);
+            GameObject charecterInstance = Instantiate(CharecterPrefabs, transform.position, Quaternion.identity);
             charecterInstance.GetComponent<CharecterInCounterScript>().counterManager = this;
+            charecterInstance.GetComponent<CharecterInCounterScript>().myCharecter = CharectersToSpawn[0];
+
+            CharectersToSpawn.RemoveAt(0);
             IsThereCharecterOnCounter = true;
         }
         else

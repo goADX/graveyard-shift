@@ -15,9 +15,11 @@ public class GraveYardManager : MonoBehaviour
     [System.NonSerialized]
     public Grave[,] graves;
     public GameObject graveParentObject;
+    public GameObject poofPrefab;
 
-
-
+    public Vector3 coffinInitSpawnPositions;
+    public Vector3 coffinSpawnSpacing;
+    public int coffinSpawnNumber = 0;
 
     public enum MouseState
     {
@@ -29,6 +31,8 @@ public class GraveYardManager : MonoBehaviour
     }
     public MouseState currentMouseState = MouseState.None;
     public Charecters charecterHeld;
+
+    public CoffinScript coffinHeld;
 
 
     private void Awake()
@@ -162,11 +166,66 @@ public class GraveYardManager : MonoBehaviour
                     if (grave.OccupyGrave(charecterHeld))
                     {
                         charecterHeld = null; // Clear the held character after placing
+                        coffinHeld.DestroyCoffin();
+                        coffinHeld = null;
+                        GameObject poof = Instantiate(poofPrefab, grave.transform.position, Quaternion.identity);
+                        poof.transform.position = new Vector3(grave.transform.position.x, grave.transform.position.y, grave.transform.position.z - 0.5f);
                     }
                 }
                 break;
             default:
                 break;
         }
+    }
+
+
+    public bool HandleCoffinClick(CoffinScript coffin)
+    {
+        if(coffinHeld != null)
+        {
+            coffinHeld.abandonCoffin();
+        }
+        coffinHeld = coffin;
+        charecterHeld = coffin.charecterInside;
+        currentMouseState = MouseState.Character;
+        return true;
+    }
+
+    public void SetMouseState(MouseState newState)
+    {
+        if(coffinHeld != null)
+        {
+            coffinHeld.abandonCoffin();
+            coffinHeld = null;
+            charecterHeld = null;
+        }
+        currentMouseState = newState;
+    }
+
+    private void OnDrawGizmos() {
+        //draw coffin grid
+        for (int row = 0; row < rows; row++)
+        {
+            for (int column = 0; column < columns; column++)
+            {
+                Vector3 spawnPosition = initialPosition + new Vector3(
+                    column * graveSpacingX,
+                    -row * graveSpacingY, // Rows go downward
+                    0f
+                );
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireCube(spawnPosition, new Vector3(1, 1, 0));
+            }
+        }
+
+    }
+    public void NewDay()
+    {
+        coffinSpawnNumber = 0;
+    }
+
+    public void SpawnNewCoffin(Charecters charecter)
+    {
+        
     }
 }

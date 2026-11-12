@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 public class Grave : MonoBehaviour, IPointerClickHandler
 {
     public GraveYardManager graveyardManager;
@@ -10,6 +11,7 @@ public class Grave : MonoBehaviour, IPointerClickHandler
     public Sprite graveSprite;
     public Sprite dugGraveSprite;
     public Charecters OccupyingCharecter;
+    public GameObject coffinPrefab;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -19,15 +21,36 @@ public class Grave : MonoBehaviour, IPointerClickHandler
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (Mouse.current == null ||
+            !Mouse.current.leftButton.wasPressedThisFrame)
+            return;
+
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null)
+            return;
+
+        Vector2 screenPosition = Mouse.current.position.ReadValue();
+        Vector3 worldPosition =
+            mainCamera.ScreenToWorldPoint(screenPosition);
+
+        Collider2D hit = Physics2D.OverlapPoint(worldPosition);
+
+        if (hit != null && hit.gameObject == gameObject)
+        {
+            graveyardManager.HandleGraveClick(this);
+        }
     }
 
     public void DigUpGrave()
     {
         isDug = true;
         GetComponent<SpriteRenderer>().sprite = dugGraveSprite;
+        if(OccupyingCharecter != null)
+        {
+            SpawnCoffin();
+        }
     }
     public void FillGrave()
     {
@@ -58,5 +81,19 @@ public class Grave : MonoBehaviour, IPointerClickHandler
             
         }
     }
+    public void SpawnCoffin()
+    {
+        GameObject coffin = Instantiate(coffinPrefab, transform.position, Quaternion.identity);
+        CoffinScript coffinScript = coffin.GetComponent<CoffinScript>();
+        coffinScript.charecterInside = OccupyingCharecter;
+        OccupyingCharecter = null;
+        coffin.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.1f);
+        coffinScript.graveyardManager = graveyardManager;
+        isOccupied = false;
+
+
+    }
+    
+
 
 }
