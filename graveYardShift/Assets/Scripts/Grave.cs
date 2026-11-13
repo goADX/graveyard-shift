@@ -4,14 +4,18 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 public class Grave : MonoBehaviour, IPointerClickHandler
 {
-    public GraveYardManager graveyardManager;
+    public GraveYardManager graveyardManager()
+    {
+        return GraveYardManager.instance;
+    }
     public bool isOccupied;
     public bool isDug;
-
+    public Vector2Int gravePosition;
     public Sprite graveSprite;
     public Sprite dugGraveSprite;
     public Charecters OccupyingCharecter;
     public GameObject coffinPrefab;
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -39,7 +43,7 @@ public class Grave : MonoBehaviour, IPointerClickHandler
 
         if (hit != null && hit.gameObject == gameObject)
         {
-            graveyardManager.HandleGraveClick(this);
+            graveyardManager().HandleGraveClick(this);
         }
     }
 
@@ -77,7 +81,7 @@ public class Grave : MonoBehaviour, IPointerClickHandler
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            graveyardManager.HandleGraveClick(this);
+            graveyardManager().HandleGraveClick(this);
             
         }
     }
@@ -88,12 +92,16 @@ public class Grave : MonoBehaviour, IPointerClickHandler
         coffinScript.charecterInside = OccupyingCharecter;
         OccupyingCharecter = null;
         coffin.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.1f);
-        coffinScript.graveyardManager = graveyardManager;
+        coffinScript.graveyardManager = graveyardManager();
         isOccupied = false;
-
-
+        graveyardManager().coffinsInScene.Add(coffinScript);
     }
     
+
+    public bool AmIReady()
+    {
+        return !isDug;
+    }
 
 
 }

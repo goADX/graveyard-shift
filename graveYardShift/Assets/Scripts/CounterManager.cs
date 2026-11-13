@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 //using System;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class CounterManager : MonoBehaviour
 {
@@ -10,13 +11,18 @@ public class CounterManager : MonoBehaviour
     public GameObject CharecterPrefabs;
     public Charecters[] AllCharecters;
     public Requests[] RequestsList;
+    public static CounterManager instance;
+
+    public GameObject TextBoxObject;
+    public TMP_Text TextBoxScript;
 
     private void Awake()
     {
-        AllCharecters = Resources.LoadAll<Charecters>("Characters");
+        instance = this;
+        AllCharecters = Resources.LoadAll<Charecters>("Charecters");
 
         if (AllCharecters.Length == 0)
-            Debug.LogWarning("No prefabs found in the folder.");
+            Debug.LogWarning("No Charecters found in the folder.");
 
 
         RequestsList = Resources.LoadAll<Requests>("Messages");
@@ -53,7 +59,6 @@ public class CounterManager : MonoBehaviour
 
     public void PickRequest()
     {
-        
         for (int i = 0; i < numOfRequests; i++)
         {
             CharectersToSpawn.Add(AllCharecters[Random.Range(0, AllCharecters.Length)]);            
@@ -69,8 +74,12 @@ public class CounterManager : MonoBehaviour
             //get the next in queue
 
             GameObject charecterInstance = Instantiate(CharecterPrefabs, transform.position, Quaternion.identity);
-            charecterInstance.GetComponent<CharecterInCounterScript>().counterManager = this;
-            charecterInstance.GetComponent<CharecterInCounterScript>().myCharecter = CharectersToSpawn[0];
+            CharecterInCounterScript charCounterScript = charecterInstance.GetComponent<CharecterInCounterScript>();
+            charCounterScript.counterManager = this;
+            charCounterScript.myCharecter = CharectersToSpawn[0];
+            charCounterScript.TextBox = TextBoxObject;
+            charCounterScript.dialogueText = TextBoxScript;
+            charCounterScript.currentRequest = GetPossibleRequest(CharectersToSpawn[0]);
 
             CharectersToSpawn.RemoveAt(0);
             IsThereCharecterOnCounter = true;
@@ -82,28 +91,7 @@ public class CounterManager : MonoBehaviour
     }
 
 
-    public Requests GetValidRequest(Charecters charecter)
-    {
-        List<Requests> validRequests = new List<Requests>();
-        //weights = request.weight;
-        foreach (var request in RequestsList)
-        {
-            if (request.requester == Requests.Requester.Charecter && request.charecterRequester == charecter)
-            {
-                validRequests.Add(request);
-            }
-            
-        }
-
-        if (validRequests.Count > 0)
-        {
-            return PickWeightedRequest(validRequests);        }
-        else
-        {
-            Debug.LogWarning("No valid requests found for the given character.");
-            return null;
-        }
-    }
+    
 
     private Requests PickWeightedRequest(List<Requests> requests)
     {
@@ -144,4 +132,31 @@ public class CounterManager : MonoBehaviour
         IsThereCharecterOnCounter = false;
         theGreatPlayManager.AddRequest(request, charecter);
     }
+
+    public Requests GetPossibleRequest(Charecters charecter)
+{
+    List<Requests> possibleRequests = new List<Requests>();
+
+    foreach (var request in RequestsList)
+    {
+        bool matches = request.requester switch
+        {
+            Requests.Requester.Any => true,
+            Requests.Requester.Charecter => request.charecterRequester == charecter,
+            Requests.Requester.TypeOfCharecter => request.monsterTypeRequester == charecter.monsterType,
+            _ => false
+        };
+
+        if (matches)
+            possibleRequests.Add(request);
+    }
+
+    if (possibleRequests.Count == 0)
+    {
+        Debug.LogWarning("No possible requests found for the given character.");
+        return null;
+    }
+
+    return PickWeightedRequest(possibleRequests);
+}
 }
