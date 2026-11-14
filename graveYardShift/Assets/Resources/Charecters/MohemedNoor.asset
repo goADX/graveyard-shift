@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ad795285fd32e43bd854c645bcbf51, type: 3}
   m_Name: MohemedNoor
   m_EditorClassIdentifier: Assembly-CSharp::Charecters
-  charecterSprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  charecterSprite: {fileID: -4851130127175742601, guid: 53da287dec39c6141ba7c73485c672e4, type: 3}
   charecterName: Mohemed Noor
   monsterType: 1
-  repeatable: 0
+  repeatable: 1
   clonable: 0
   Description: aaaaaaaaaaaaaaaa

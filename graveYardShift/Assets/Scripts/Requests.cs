@@ -13,11 +13,13 @@ public class Requests : ScriptableObject
         Charecter,
         
     }
-    [Header("Message Requester")]
+    //[Header("Message Requester")]
     public Requester requester;
     public Charecters charecterRequester;
     public MonsterTypes monsterTypeRequester;
 
+    public Requests RequestsDoneRule;
+    public Requests RequestsFailedRule;
 
 
 
@@ -40,7 +42,7 @@ public class Requests : ScriptableObject
         MoveToAnyLocation,
         MoveOut
     }
-    [Header("Request Type")]
+    //[Header("Request Type")]
     [SerializeField]
     public RequestType requestType;
     public int LineNumber;
@@ -51,17 +53,15 @@ public class Requests : ScriptableObject
     public float weight = 1f;
 
 
-    [Header("you need to enable at least on stayer for the duration to work")]
+    //[Header("you need to enable at least on stayer for the duration to work")]
     public int requestDuration = 0;//in whole days
     public bool StayWhenDone = false;
     public bool StayWhenFailed = false;
 
-    [Header("Scores updates")]
+    //[Header("Scores updates")]
     public double scoreToGainOnDone = 0;
     public double scoreToLoseOnFail = 0;
-
-    [Header("Message")]
-    
+    //[Header("Message")]
     public string requestText;
 
     #nullable enable
@@ -95,7 +95,7 @@ public struct RequestData
 
     public string getDescription()
     {
-        string description = PersonMakingRequest.charecterName + "wants";
+        string description = PersonMakingRequest!=null? PersonMakingRequest.charecterName + " wants ": "Null wants";
 
         switch (request.requestType)
         {

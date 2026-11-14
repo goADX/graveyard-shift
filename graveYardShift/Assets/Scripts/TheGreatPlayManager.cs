@@ -73,6 +73,7 @@ public class TheGreatPlayManager : MonoBehaviour
     public void AddRequest(Requests request, Charecters personMakingRequest)
     {
         RequestsList.Add(new RequestData(request, personMakingRequest));
+        ListUI.instance.RefreshRequests();
     }
 
     public bool CheckRequest(RequestData request)
@@ -109,6 +110,8 @@ public class TheGreatPlayManager : MonoBehaviour
         {
             RequestsList.RemoveAt(request);
         }
+
+        ListUI.instance.RefreshRequests();
     }
 
 
@@ -151,7 +154,11 @@ public class TheGreatPlayManager : MonoBehaviour
     {
         CheckAllRequests();
         GraveYardManager.instance.NewDay();
+        SpawnNewCoffins(Random.Range(1, 3));//tmp
+        CounterManager.instance.NewDay();
         CounterManager.instance.PickRequest();
+        
+        
     }
 
 
@@ -188,6 +195,67 @@ public class TheGreatPlayManager : MonoBehaviour
         {
             return true;
         }
+    }
+
+
+
+
+    public void SpawnNewCoffins(int numberOfCoffins)
+    {
+        for(int i = 0; i<numberOfCoffins; i++)
+        {
+            Charecters newCharecter = NewCharectersToBurry();
+            if(newCharecter!=null)
+            {
+                GraveYardManager.instance.SpawnNewCoffin(newCharecter);
+            }
+        }
+    }
+    
+    private HashSet<Charecters> alreadyCame = new HashSet<Charecters>();
+
+    public Charecters NewCharectersToBurry()
+    {
+        List<Charecters> candidates = new List<Charecters>();
+
+        foreach (Charecters charecter in CounterManager.instance.AllCharecters)
+        {
+            if (!charecter.repeatable && alreadyCame.Contains(charecter))
+            {
+                continue;
+            }
+            if (!charecter.clonable && IsCharecterInPlay(charecter))
+            {
+                continue;
+            }
+            candidates.Add(charecter);
+        }
+
+        if (candidates.Count == 0)
+        {
+            print("No Charecters Found and possible.");
+            return null;
+        }
+
+        Charecters picked = candidates[Random.Range(0, candidates.Count)];
+        alreadyCame.Add(picked);
+        return picked;
+    }
+
+    private bool IsCharecterInPlay(Charecters charecter)
+    {
+        if (GraveYardManager.instance.charecterCurrentPositions.ContainsKey(charecter))
+        {
+            return true;
+        }
+        foreach (CoffinScript coffin in GraveYardManager.instance.coffinsInScene)
+        {
+            if (coffin.charecterInside == charecter)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     

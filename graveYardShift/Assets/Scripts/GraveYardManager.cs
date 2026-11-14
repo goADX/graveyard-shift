@@ -167,6 +167,7 @@ public class GraveYardManager : MonoBehaviour
                         //spawn poof
                         GameObject poof = Instantiate(poofPrefab, grave.transform.position, Quaternion.identity);
                         poof.transform.position = new Vector3(grave.transform.position.x, grave.transform.position.y, grave.transform.position.z - 0.5f);
+                        ListUI.instance.RefreshCharacters();
                     }
                 }
                 break;
@@ -280,6 +281,53 @@ public class GraveYardManager : MonoBehaviour
     {
         SaveCharecterPositions();
         charecterCurrentPositions = charecterYesterdayPositions.ToDictionary(entry => entry.Key, entry => entry.Value);
+        ListUI.instance.RefreshCharacters();
+        ListUI.instance.RefreshRequests();
+    }
+    public Charecters GetRandomCharecterInGraveyard()
+    {
+        List<Charecters> occupants = new List<Charecters>();
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int column = 0; column < columns; column++)
+            {
+                Grave grave = graves[row, column];
+                if (grave != null && grave.isOccupied)
+                {
+                    occupants.Add(grave.OccupyingCharecter);
+                }
+            }
+        }
+
+        if (occupants.Count == 0)
+            return null;
+
+        return occupants[UnityEngine.Random.Range(0, occupants.Count)];
+    }
+    public Charecters GetRandomCharecterInGraveyard(List<Charecters> excludeList)
+    {
+        List<Charecters> occupants = new List<Charecters>();
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int column = 0; column < columns; column++)
+            {
+                Grave grave = graves[row, column];
+                if (grave != null && grave.isOccupied)
+                {
+                    if (!excludeList.Contains(grave.OccupyingCharecter))
+                    {
+                        occupants.Add(grave.OccupyingCharecter);
+                    }
+                }
+            }
+        }
+
+        if (occupants.Count == 0)
+            return null;
+
+        return occupants[UnityEngine.Random.Range(0, occupants.Count)];
     }
 
 

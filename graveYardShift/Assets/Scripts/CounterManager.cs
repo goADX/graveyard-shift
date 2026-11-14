@@ -15,6 +15,8 @@ public class CounterManager : MonoBehaviour
 
     public GameObject TextBoxObject;
     public TMP_Text TextBoxScript;
+    public List<Requests> RequestsDone;
+    public List<Requests> RequestsFailed;
 
     private void Awake()
     {
@@ -55,13 +57,28 @@ public class CounterManager : MonoBehaviour
             }
         }
     }
+    List<Charecters> alreadyCame = new List<Charecters>();
+
+    public Charecters getFromGraveYard()
+    {
+        
+
+        return GraveYardManager.instance.GetRandomCharecterInGraveyard(alreadyCame);
+    }
 
 
     public void PickRequest()
     {
+        if(getFromGraveYard()==null) return;
         for (int i = 0; i < numOfRequests; i++)
         {
-            CharectersToSpawn.Add(AllCharecters[Random.Range(0, AllCharecters.Length)]);            
+            Charecters NewCharecter = getFromGraveYard();
+            if (NewCharecter == null)
+            {
+                break;
+            }
+            alreadyCame.Add(NewCharecter);
+            CharectersToSpawn.Add(NewCharecter);            
         }
     }
 
@@ -72,17 +89,22 @@ public class CounterManager : MonoBehaviour
             
             
             //get the next in queue
-
+            Requests PossibleRequest = GetPossibleRequest(CharectersToSpawn[0]);
+            if(PossibleRequest != null){
             GameObject charecterInstance = Instantiate(CharecterPrefabs, transform.position, Quaternion.identity);
             CharecterInCounterScript charCounterScript = charecterInstance.GetComponent<CharecterInCounterScript>();
+            charecterInstance.transform.position = charCounterScript.initialPosition;
             charCounterScript.counterManager = this;
             charCounterScript.myCharecter = CharectersToSpawn[0];
             charCounterScript.TextBox = TextBoxObject;
             charCounterScript.dialogueText = TextBoxScript;
-            charCounterScript.currentRequest = GetPossibleRequest(CharectersToSpawn[0]);
+            charCounterScript.currentRequest = PossibleRequest;
+            IsThereCharecterOnCounter = true;
+            
+            }
 
             CharectersToSpawn.RemoveAt(0);
-            IsThereCharecterOnCounter = true;
+            
         }
         else
         {
@@ -134,29 +156,57 @@ public class CounterManager : MonoBehaviour
     }
 
     public Requests GetPossibleRequest(Charecters charecter)
-{
-    List<Requests> possibleRequests = new List<Requests>();
-
-    foreach (var request in RequestsList)
     {
-        bool matches = request.requester switch
+        List<Requests> possibleRequests = new List<Requests>();
+
+        foreach (var request in RequestsList)
         {
-            Requests.Requester.Any => true,
-            Requests.Requester.Charecter => request.charecterRequester == charecter,
-            Requests.Requester.TypeOfCharecter => request.monsterTypeRequester == charecter.monsterType,
-            _ => false
-        };
+            bool matches = request.requester switch
+            {
+                Requests.Requester.Any => true,
+                Requests.Requester.Charecter => request.charecterRequester == charecter,
+                Requests.Requester.TypeOfCharecter => request.monsterTypeRequester == charecter.monsterType,
+                _ => false
+            };
+            if(matches == false)
+            {
+                continue;
+            }
+            bool hasDone = request.RequestsDoneRule != null;
+            bool hasFailed = request.RequestsFailedRule != null;
 
-        if (matches)
-            possibleRequests.Add(request);
+            if (!(hasDone && hasFailed && (RequestsDone.Contains(request) || RequestsFailed.Contains(request))))
+            {
+                if (hasDone && !RequestsDone.Contains(request.RequestsDoneRule))
+                {
+                    matches = false;
+                }
+
+                if (hasFailed && !RequestsFailed.Contains(request.RequestsFailedRule))
+                {
+                    matches = false;
+                }
+            }
+
+            if (matches)
+                possibleRequests.Add(request);
+        }
+
+        if (possibleRequests.Count == 0)
+        {
+            Debug.LogWarning("No possible requests found for the given character.");
+            return null;
+        }
+
+        return PickWeightedRequest(possibleRequests);
     }
 
-    if (possibleRequests.Count == 0)
+
+
+
+    public void NewDay()
     {
-        Debug.LogWarning("No possible requests found for the given character.");
-        return null;
+        alreadyCame.Clear();
+        CharectersToSpawn.Clear();
     }
-
-    return PickWeightedRequest(possibleRequests);
-}
 }

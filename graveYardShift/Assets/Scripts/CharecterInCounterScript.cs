@@ -122,10 +122,6 @@ public class CharecterInCounterScript : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void LateUpdate()
-    {
-        
-    }
 
 
     public void Move(Vector3 movement)

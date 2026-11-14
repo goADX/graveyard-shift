@@ -15,9 +15,16 @@ MonoBehaviour:
   requester: 0
   charecterRequester: {fileID: 0}
   monsterTypeRequester: 0
+  RequestsDoneRule: {fileID: 0}
+  RequestsFailedRule: {fileID: 0}
   requestType: 2
   LineNumber: 0
   exactLocation: {x: 0, y: 0}
   charecterRelatedToRequest: {fileID: 0}
   weight: 1
+  requestDuration: 0
+  StayWhenDone: 0
+  StayWhenFailed: 0
+  scoreToGainOnDone: 0
+  scoreToLoseOnFail: 0
   requestText: 

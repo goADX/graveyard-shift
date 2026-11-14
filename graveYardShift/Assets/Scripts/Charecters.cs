@@ -10,6 +10,7 @@ public class Charecters : ScriptableObject
     public bool repeatable;
     [Tooltip("if the charecter can come while another copy of it is still in there")]
     public bool clonable;
-
+    [Tooltip("a description of the charecter")]
+    [TextArea(10, 10)]
     public string Description;
 }
